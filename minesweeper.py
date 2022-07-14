@@ -12,6 +12,7 @@ x = 0
 mn = ''
 minenum = 0
 
+
 def laying_mine(count):
     rate = rows * cols / count
     mined = 0
@@ -27,15 +28,15 @@ def laying_mine(count):
 
 def print_field(display_mine):
     head = []
-    rownumber = 0
+    row_number = 0
     for i in range(cols):
         head.append(i)
-    print('  ',end='')
+    print('  ', end='')
     print(head)
     for line in fieldArray:
-        print(rownumber,end=': ')
+        print(row_number, end=': ')
         for e in line:
-            if display_mine == False:
+            if display_mine is False:
                 if e == '-':
                     print('-'+', ',end='')
                 if e == 'm':
@@ -46,12 +47,13 @@ def print_field(display_mine):
                     print('u' + ', ', end='')
                 if e == 'b':
                     print('m' + ', ', end='')
-                if str(e).isdigit() == True:
+                if str(e).isdigit() is True:
                     print(str(e) + ', ', end='')
-            if display_mine == True:
+            if display_mine is True:
                 print(str(e) + ', ', end='')
         print('\n')
-        rownumber += 1
+        row_number += 1
+
 
 def is_num(value):
     try:
@@ -60,6 +62,7 @@ def is_num(value):
         return False
     else:
         return True
+
 
 def main_loop():
     win = 0
@@ -91,118 +94,45 @@ def main_loop():
             print(y, x, mn)
             if mn == 'n':
                 if fieldArray[y][x] == 'm':
-                    fieldArray[y][x] = 'b' #boom
+                    fieldArray[y][x] = 'b'  # boom
                     win = -1
                     print('game over')
                     print_field(True)
                 if fieldArray[y][x] == '-':
                     fieldArray[y][x] = 'u'  # discovered
                     minenum = 0
-                    if y-1 < 0 and not x-1 < 0 and not x+1 > cols-1:  # top row
-                        if fieldArray[y][x-1] == 'm' or fieldArray[y][x-1] == 'r':
+                    if y >= 1 and x >= 1:  # top left
+                        if fieldArray[y-1][x-1] == 'm' or fieldArray[y-1][x-1] == 'r':
                             minenum += 1
-                        if fieldArray[y][x+1] == 'm'or fieldArray[y][x+1] =='r':
-                            minenum += 1
-                        if fieldArray[y+1][x-1] == 'm'or fieldArray[y+1][x-1] =='r':
-                            minenum += 1
-                        if fieldArray[y+1][x] == 'm'or fieldArray[y+1][x] == 'r':
-                            minenum += 1
-                        if fieldArray[y+1][x+1] == 'm'or fieldArray[y+1][x+1] == 'r':
-                            minenum += 1
-                        fieldArray[y][x] = minenum
-                    if y - 1 < 0 and x - 1 < 0:  # top left corner
-                        if fieldArray[y][x + 1] == 'm'or fieldArray[y][x + 1] == 'r':
-                            minenum += 1
-                        if fieldArray[y + 1][x] == 'm'or fieldArray[y + 1][x] == 'r':
-                            minenum += 1
-                        if fieldArray[y + 1][x + 1] == 'm'or fieldArray[y + 1][x + 1] == 'r':
-                            minenum += 1
-                        fieldArray[y][x] = minenum
-                    if y-1 < 0 and x+1 > cols-1:  # top right corner
-                        if fieldArray[y][x-1] == 'm'or fieldArray[y][x-1] == 'r':
-                            minenum += 1
-                        if fieldArray[y+1][x-1] == 'm'or fieldArray[y+1][x-1] == 'r':
-                            minenum += 1
-                        if fieldArray[y+1][x] == 'm'or fieldArray[y+1][x] =='r':
-                            minenum += 1
-                        fieldArray[y][x] = minenum
-                    if not y-1 < 0 and x-1 < 0 and not y+1 > rows-1:  # left col
-                        if fieldArray[y-1][x] == 'm'or fieldArray[y-1][x] == 'r':
-                            minenum += 1
-                        if fieldArray[y-1][x+1] == 'm'or fieldArray[y-1][x+1] =='r':
-                            minenum += 1
-                        if fieldArray[y][x+1] == 'm'or fieldArray[y][x+1] == 'r':
-                            minenum += 1
-                        if fieldArray[y+1][x] == 'm'or fieldArray[y+1][x] =='r':
-                            minenum += 1
-                        if fieldArray[y+1][x+1] == 'm'or fieldArray[y+1][x+1] =='r':
-                            minenum += 1
-                        fieldArray[y][x] = minenum
-                    if not y-1 < 0 and not y+1 > rows-1 and x+1 > cols-1:  # right col
-                        if fieldArray[y-1][x-1] == 'm'or fieldArray[y-1][x-1] =='r':
-                            minenum += 1
-                        if fieldArray[y-1][x] == 'm'or fieldArray[y-1][x] == 'r':
-                            minenum += 1
-                        if fieldArray[y][x-1] == 'm'or  fieldArray[y][x-1] == 'r':
-                            minenum += 1
-                        if fieldArray[y+1][x-1] == 'm'or fieldArray[y+1][x-1] =='r':
-                            minenum += 1
-                        if fieldArray[y+1][x] == 'm'or fieldArray[y+1][x] =='r':
-                            minenum += 1
-                        fieldArray[y][x] = minenum
-                    if not x-1 < 0 and y+1 > rows-1 and not x+1 > cols-1:  # down row
-                        if fieldArray[y-1][x-1] == 'm'or fieldArray[y-1][x-1] =='r':
-                            minenum += 1
-                        if fieldArray[y-1][x] == 'm'or fieldArray[y-1][x] =='r':
-                            minenum += 1
-                        if fieldArray[y-1][x+1] == 'm'or fieldArray[y-1][x+1] =='r':
-                            minenum += 1
-                        if fieldArray[y][x-1] == 'm'or fieldArray[y][x-1] == 'r':
-                            minenum += 1
-                        if fieldArray[y][x+1] == 'm'or fieldArray[y][x+1] == 'r':
-                            minenum += 1
-                        fieldArray[y][x] = minenum
-                    if x-1 < 0 and y+1 > rows-1:  # down left corner
-                        if fieldArray[y-1][x] == 'm'or fieldArray[y-1][x] =='r':
-                            minenum += 1
-                        if fieldArray[y][x+1] == 'm'or fieldArray[y][x+1] =='r':
-                            minenum += 1
-                        if fieldArray[y-1][x+1] == 'm'or fieldArray[y-1][x+1] == 'r':
-                            minenum += 1
-                        fieldArray[y][x] = minenum
-                    if x+1 > cols-1 and y+1 > rows-1:  # down right corner
+                    if y >= 1:  # top
                         if fieldArray[y-1][x] == 'm' or fieldArray[y-1][x] == 'r':
                             minenum += 1
-                        if fieldArray[y-1][x-1] == 'm' or fieldArray[y-1][x-1] =='r':
+                    if y >= 1 and x <= cols-2:  # top right
+                        if fieldArray[y-1][x+1] == 'm' or fieldArray[y-1][x+1] == 'r':
                             minenum += 1
+                    if x >= 1:  # left
                         if fieldArray[y][x-1] == 'm' or fieldArray[y][x-1] == 'r':
                             minenum += 1
-                        fieldArray[y][x] = minenum
-                    if not x+1 > cols-1 and not y+1 > rows-1 and not x-1<0 and not y-1<0:
-                        if fieldArray[y-1][x-1] == 'm'or fieldArray[y-1][x-1] =='r':
-                            minenum += 1
-                        if fieldArray[y-1][x] == 'm' or fieldArray[y-1][x] =='r':
-                            minenum += 1
-                        if fieldArray[y-1][x+1] == 'm' or fieldArray[y-1][x+1] =='r':
-                            minenum += 1
-                        if fieldArray[y][x-1] == 'm' or fieldArray[y][x-1] =='r':
-                            minenum += 1
+                    if x <= cols-2:  # right
                         if fieldArray[y][x+1] == 'm' or fieldArray[y][x+1] == 'r':
                             minenum += 1
-                        if fieldArray[y+1][x-1] == 'm' or fieldArray[y+1][x-1] =='r':
+                    if y <= rows-2:  # down
+                        if fieldArray[y+1][x] == 'm' or fieldArray[y+1][x] == 'r':
                             minenum += 1
+                    if x >= 1 and y <= rows-2:  # down left
+                        if fieldArray[y+1][x-1] == 'm' or fieldArray[y+1][x-1] == 'r':
+                            minenum += 1
+                    if x <= cols-2 and y <= rows-2:  # down right
                         if fieldArray[y+1][x+1] == 'm' or fieldArray[y+1][x+1] == 'r':
                             minenum += 1
-                        if fieldArray[y+1][x] == 'm' or fieldArray[y+1][x] =='r':
-                            minenum += 1
-                        fieldArray[y][x] = minenum
+                    fieldArray[y][x] = minenum
             if mn == 'm':
                 if fieldArray[y][x] == '-':
-                    fieldArray[y][x] = 'f' #false mine
+                    fieldArray[y][x] = 'f'  # false mine
                 elif fieldArray[y][x] == 'f':
                     fieldArray[y][x] = '-'
                 if fieldArray[y][x] == 'm':
-                    fieldArray[y][x] = 'r' #real mine
+                    fieldArray[y][x] = 'r'  # real mine
                 elif fieldArray[y][x] == 'r':
                     fieldArray[y][x] = 'm'
             findmine = 0
