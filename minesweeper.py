@@ -7,10 +7,6 @@ import random
 # -:Un-swapped; m:mine; 2:found-mine; 3:failed mine; 4; empty
 rows, cols = (8, 8)
 fieldArray = [['-' for i in range(cols)] for j in range(rows)]
-y = 0
-x = 0
-mn = ''
-minenum = 0
 
 
 def laying_mine(count):
@@ -64,29 +60,92 @@ def is_num(value):
         return True
 
 
+def insert_m(x,y):
+    if fieldArray[y][x] == '-':
+        fieldArray[y][x] = 'f'  # false mine
+    elif fieldArray[y][x] == 'f':
+        fieldArray[y][x] = '-'
+    if fieldArray[y][x] == 'm':
+        fieldArray[y][x] = 'r'  # real mine
+    elif fieldArray[y][x] == 'r':
+        fieldArray[y][x] = 'm'
+
+
+def count_mine_in_game():
+    findmine = 0
+    for i in range(rows):
+        for j in range(cols):
+            if 'm' == fieldArray[i][j]:
+                findmine += 1
+            if 'f' == fieldArray[i][j]:
+                findmine += 1
+    return findmine
+
+
+def around_mine_num(x, y):
+    minenum = 0
+    if y >= 1 and x >= 1:  # top left
+        if fieldArray[y - 1][x - 1] == 'm' or fieldArray[y - 1][x - 1] == 'r':
+            minenum += 1
+    if y >= 1:  # top
+        if fieldArray[y - 1][x] == 'm' or fieldArray[y - 1][x] == 'r':
+            minenum += 1
+    if y >= 1 and x <= cols - 2:  # top right
+        if fieldArray[y - 1][x + 1] == 'm' or fieldArray[y - 1][x + 1] == 'r':
+            minenum += 1
+    if x >= 1:  # left
+        if fieldArray[y][x - 1] == 'm' or fieldArray[y][x - 1] == 'r':
+            minenum += 1
+    if x <= cols - 2:  # right
+        if fieldArray[y][x + 1] == 'm' or fieldArray[y][x + 1] == 'r':
+            minenum += 1
+    if y <= rows - 2:  # down
+        if fieldArray[y + 1][x] == 'm' or fieldArray[y + 1][x] == 'r':
+            minenum += 1
+    if x >= 1 and y <= rows - 2:  # down left
+        if fieldArray[y + 1][x - 1] == 'm' or fieldArray[y + 1][x - 1] == 'r':
+            minenum += 1
+    if x <= cols - 2 and y <= rows - 2:  # down right
+        if fieldArray[y + 1][x + 1] == 'm' or fieldArray[y + 1][x + 1] == 'r':
+            minenum += 1
+    return minenum
+
+
+def insert_wrong_or_right(insertlist, rows, cols):
+    wrong_input = 0
+    if wrong_input == 0:
+        if len(insertlist) != 3:
+            print('wrong format!')
+            wrong_input = 1
+    if wrong_input == 0:
+        if not insertlist[0].isdigit() or not insertlist[1].isdigit():
+            print('not digit!')
+            wrong_input = 1
+        insertlist[0] = int(insertlist[0])
+        insertlist[1] = int(insertlist[1])
+    print(insertlist)
+    if wrong_input == 0:
+        if insertlist[0] > rows - 1 or insertlist[1] > cols - 1:
+            print('out of limit!')
+            wrong_input = 1
+    if wrong_input == 0:
+        if insertlist[2] != 'm' and insertlist[2] != 'n':
+            print('not m or n!')
+            wrong_input = 1
+    if wrong_input == 0:
+        return 1
+
+
 def main_loop():
     win = 0
     while win == 0:
+        insert_right = 0
         print_field(True)  # real value in list
         print_field(False)  # display value
         insert = input("Insert in num(y),num(x),n/m: ")
         insertlist = insert.split(',')
-        if len(insertlist) != 3:
-            print('wrong format!')
-            continue
-        if not insertlist[0].isdigit() or not insertlist[1].isdigit():
-            print('not digit!')
-            continue
-        insertlist[0] = int(insertlist[0])
-        insertlist[1] = int(insertlist[1])
-        print(insertlist)
-        if insertlist[0] > rows-1 or insertlist[1] > cols-1:
-            print('out of limit!')
-            continue
-        if insertlist[2] != 'm' and insertlist[2] != 'n':
-            print('not m or n!')
-            continue
-        else:
+        insert_right = insert_wrong_or_right(insertlist,rows,cols)
+        if insert_right == 1:
             y = int(insertlist[0])
             x = int(insertlist[1])
             mn = insertlist[2]
@@ -100,49 +159,10 @@ def main_loop():
                     print_field(True)
                 if fieldArray[y][x] == '-':
                     fieldArray[y][x] = 'u'  # discovered
-                    minenum = 0
-                    if y >= 1 and x >= 1:  # top left
-                        if fieldArray[y-1][x-1] == 'm' or fieldArray[y-1][x-1] == 'r':
-                            minenum += 1
-                    if y >= 1:  # top
-                        if fieldArray[y-1][x] == 'm' or fieldArray[y-1][x] == 'r':
-                            minenum += 1
-                    if y >= 1 and x <= cols-2:  # top right
-                        if fieldArray[y-1][x+1] == 'm' or fieldArray[y-1][x+1] == 'r':
-                            minenum += 1
-                    if x >= 1:  # left
-                        if fieldArray[y][x-1] == 'm' or fieldArray[y][x-1] == 'r':
-                            minenum += 1
-                    if x <= cols-2:  # right
-                        if fieldArray[y][x+1] == 'm' or fieldArray[y][x+1] == 'r':
-                            minenum += 1
-                    if y <= rows-2:  # down
-                        if fieldArray[y+1][x] == 'm' or fieldArray[y+1][x] == 'r':
-                            minenum += 1
-                    if x >= 1 and y <= rows-2:  # down left
-                        if fieldArray[y+1][x-1] == 'm' or fieldArray[y+1][x-1] == 'r':
-                            minenum += 1
-                    if x <= cols-2 and y <= rows-2:  # down right
-                        if fieldArray[y+1][x+1] == 'm' or fieldArray[y+1][x+1] == 'r':
-                            minenum += 1
-                    fieldArray[y][x] = minenum
+                    fieldArray[y][x] = around_mine_num(x,y)
             if mn == 'm':
-                if fieldArray[y][x] == '-':
-                    fieldArray[y][x] = 'f'  # false mine
-                elif fieldArray[y][x] == 'f':
-                    fieldArray[y][x] = '-'
-                if fieldArray[y][x] == 'm':
-                    fieldArray[y][x] = 'r'  # real mine
-                elif fieldArray[y][x] == 'r':
-                    fieldArray[y][x] = 'm'
-            findmine = 0
-            for i in range(rows):
-                for j in range(cols):
-                    if 'm' == fieldArray[i][j]:
-                        findmine += 1
-                    if 'f' == fieldArray[i][j]:
-                        findmine += 1
-            if findmine == 0:
+                insert_m(x, y)
+            if count_mine_in_game() == 0:
                 print('Win !')
                 win = 1
 
@@ -150,7 +170,7 @@ def main_loop():
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     win = 0
-    laying_mine(5)
+    laying_mine(10)
 
     main_loop()
 
